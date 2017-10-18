@@ -16,10 +16,8 @@ ThemeProvider.propTypes = {
   uiTheme: shape({}).isRequired,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    uiTheme: state.uiTheme,
-  };
-};
+const mapStateToProps = state => ({
+  uiTheme: state.uiTheme,
+});
 
 export default connect(mapStateToProps)(ThemeProvider);
