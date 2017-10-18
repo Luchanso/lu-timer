@@ -6,4 +6,3 @@ cache:
 script:
   - yarn run lint
   - yarn run build
-  - yarn test
