@@ -10,7 +10,7 @@ const defaultTheme = {
   },
 };
 
-export const updateUiTheme = createAction('UPDATE_UI_THEME');
+export const updateUiTheme = createAction('uiTheme/UPDATE');
 
 export const uiTheme = handleAction(
   updateUiTheme,

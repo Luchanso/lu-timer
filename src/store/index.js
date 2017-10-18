@@ -1,13 +1,21 @@
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
 import { uiTheme } from './uiTheme';
+import { storageMiddlewareReducer } from './storage';
 
-const reducers = combineReducers({
+const rootReducer = combineReducers({
   uiTheme,
 });
+const reducers = compose(storageMiddlewareReducer)(rootReducer);
 
-/* eslint-disable no-underscore-dangle */
+const enhancer = compose(
+  applyMiddleware(thunk),
+  /* eslint-disable no-underscore-dangle */
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  /* eslint-enable */
+);
+
 export default createStore(
   reducers,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  enhancer,
 );
-/* eslint-enable */
