@@ -1,15 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
-import store from './store';
 
-class App extends Component {
-  render() {
-    return (
-      <Provider store={store}>
-        <h1>Hello world 1</h1>
-      </Provider>
-    );
-  }
-}
+import store from './store';
+import Timers from './containers/Timers';
+import ThemeProvider from './containers/ThemeProvider';
+
+require('typeface-roboto');
+
+const App = () => (
+  <Provider store={store}>
+    <ThemeProvider>
+      <Timers />
+    </ThemeProvider>
+  </Provider>
+);
 
 export default App;
