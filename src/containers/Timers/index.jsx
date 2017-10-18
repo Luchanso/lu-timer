@@ -72,7 +72,7 @@ const testData = [
   },
 ];
 
-for (let i = 0; i < 13; i++) {
+for (let i = 0; i < 13; i += 1) {
   testData.push({
     seconds: Math.round(Math.random() * 200000),
     id: Math.random().toString(),
