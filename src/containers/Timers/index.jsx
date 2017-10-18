@@ -1,15 +1,23 @@
-/* eslint-disable */
 import React from 'react';
+import { func, shape, arrayOf } from 'prop-types';
 import { connect } from 'react-redux';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
-import Card, { CardContent } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
 import { compose } from 'recompose';
 import Controls from './Controls';
+import Timer from '../../components/Timer';
 import { updateUiTheme } from '../../store/uiTheme';
+import { start as timerStart } from '../../store/timers';
 
 class Timers extends React.Component {
+  static propTypes = {
+    classes: shape({}).isRequired,
+    uiTheme: shape({}).isRequired,
+    timers: arrayOf(shape({})).isRequired,
+    onUpdateUiTheme: func.isRequired,
+    onStart: func.isRequired,
+  };
+
   handleChangeTheme = () => {
     const { uiTheme, onUpdateUiTheme } = this.props;
 
@@ -18,23 +26,25 @@ class Timers extends React.Component {
       palette: {
         ...uiTheme.palette,
         type: uiTheme.palette.type === 'light' ? 'dark' : 'light',
-      }
-    })
+      },
+    });
+  };
+
+  handleClick = (id) => {
+    const { onStart } = this.props;
+
+    onStart(id);
   };
 
   render() {
+    const { uiTheme, timers } = this.props;
+
     return (
       <Grid container>
         <Grid item xs={12}>
-          <Controls theme={this.props.theme.palette.type} onChangeTheme={this.handleChangeTheme} />
+          <Controls theme={uiTheme.palette.type} onChangeTheme={this.handleChangeTheme} />
         </Grid>
-        <Grid item xs={2}>
-          <Card>
-            <CardContent>
-              <Typography type="headline">Timer1 - 00:00:00</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+        {timers.map(timer => <Timer key={timer.id} {...timer} onClick={this.handleClick} />)}
       </Grid>
     );
   }
@@ -42,11 +52,39 @@ class Timers extends React.Component {
 
 const mapDispatchToProps = {
   onUpdateUiTheme: updateUiTheme,
+  onStart: timerStart,
 };
 
-const mapStateToProps = ({ uiTheme }) => ({ uiTheme });
+const testData = [
+  {
+    id: '1',
+    title: 'Отгрузка на торговый склад номер №4',
+    seconds: 0,
+    started: false,
+    startTime: new Date().getTime(),
+  },
+  {
+    id: '2',
+    title: 'ASC',
+    seconds: 100500,
+    started: true,
+    startTime: new Date().getTime(),
+  },
+];
+
+for (let i = 0; i < 13; i++) {
+  testData.push({
+    seconds: Math.round(Math.random() * 200000),
+    id: Math.random().toString(),
+    title: (Math.random() * 1e10).toString(36),
+    startTime: new Date().getTime(),
+    started: false,
+  });
+}
+
+const mapStateToProps = ({ uiTheme }) => ({ uiTheme, timers: testData });
 
 export default compose(
-  withStyles(null, { withTheme: true }),
+  withStyles(null, { withStyles: true }),
   connect(mapStateToProps, mapDispatchToProps),
 )(Timers);

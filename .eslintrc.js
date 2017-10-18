@@ -1,7 +1,9 @@
 module.exports = {
   "parser": "babel-eslint",
   "rules": {
-    "strict": 0
+    "strict": 0,
+    "no-mixed-operators": 1,
+    "react/no-typos": 0,
   },
   "env": {
     "node": true,

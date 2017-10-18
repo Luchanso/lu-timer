@@ -20,6 +20,9 @@ const Controls = ({ classes, theme, onChangeTheme }) => (
       <Button raised color="primary" className={classes.button}>
         Экспорт CSV
       </Button>
+      <Button raised color="accent" className={classes.button}>
+        Стоп
+      </Button>
       <FormControlLabel
         control={
           <Switch
