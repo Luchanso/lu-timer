@@ -9,6 +9,12 @@ export const stop = createAction('timers/STOP');
 export const changeTitle = createAction('timers/CHANGE_TITLE');
 export const remove = createAction('timers/REMOVE');
 
+// selectors
+
+export const getStartedTimer = state => Object.values(state).find(item => item.started);
+
+// handlers
+
 const handleCreate = (state, action) => {
   const id = uuid4();
   return {
@@ -19,23 +25,6 @@ const handleCreate = (state, action) => {
       started: false,
       startTime: 0,
       seconds: 0,
-    },
-  };
-};
-
-const handleStart = (state, action) => {
-  const timer = state[action.payload];
-
-  if (timer.started) {
-    return state;
-  }
-
-  return {
-    ...state,
-    [timer.id]: {
-      ...timer,
-      started: true,
-      startTime: Date.now(),
     },
   };
 };
@@ -55,6 +44,25 @@ const handleStop = (state, action) => {
       seconds: timer.seconds + (Date.now() - timer.startTime) / 1000,
     },
   };
+};
+
+const handleStart = (state, action) => {
+  const timer = state[action.payload];
+
+  if (timer.started) {
+    return state;
+  }
+
+  const startedTimer = getStartedTimer(state);
+
+  return handleStop({
+    ...state,
+    [timer.id]: {
+      ...timer,
+      started: true,
+      startTime: Date.now(),
+    },
+  }, stop(startedTimer.id));
 };
 
 const handleChangeTitle = (state, action) => {
