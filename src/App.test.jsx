@@ -24,9 +24,13 @@ class LocalStorageMock {
   }
 }
 
-global.localStorage = new LocalStorageMock();
+const newLocalStorage = new LocalStorageMock();
+
+global.localStorage = newLocalStorage;
+window.localStorage = newLocalStorage;
 
 it('renders without crashing', () => {
+
   const div = document.createElement('div');
   ReactDOM.render(<App />, div);
 });
