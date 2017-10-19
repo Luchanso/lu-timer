@@ -9,9 +9,11 @@ export const storageMiddlewareReducer = next => (state, action) => {
   if (action.type === save.toString()) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } else if (action.type === load.toString()) {
-    const result = JSON.parse(localStorage.getItem(STORAGE_KEY));
-
-    return next(result, action);
+    const rowData = localStorage.getItem(STORAGE_KEY);
+    if (rowData) {
+      const result = JSON.parse(rowData);
+      return next(result, action);
+    }
   }
 
   return next(state, action);

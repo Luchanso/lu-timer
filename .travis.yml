@@ -5,4 +5,5 @@ cache:
   yarn: true
 script:
   - yarn run lint
+  - yarn test
   - yarn run build
