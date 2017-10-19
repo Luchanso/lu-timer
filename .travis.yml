@@ -3,14 +3,25 @@ node_js:
   - 8
 cache:
   yarn: true
-script:
-  - yarn run lint
-  - yarn test
-  - yarn run build
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  local_dir: build
-  on:
-    branch: master
+
+jobs:
+  include:
+    - stage: checks
+      script: yarn run lint
+      env: JOB=lint
+    - script: yarn test
+      env: JOB=test
+    - script: yarn run build
+      env: JOB=build
+    - stage: deploy
+      env: JOB=deploy
+      script: echo empty-script
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github_token: $GITHUB_TOKEN
+        local_dir: build
+stages:
+  - checks
+  - name: deploy
+    if: branch = master
