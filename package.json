@@ -15,6 +15,7 @@
     "recompose": "^0.26.0",
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
+    "redux-devtools-extension": "^2.13.2",
     "redux-thunk": "^2.2.0",
     "typeface-roboto": "^0.0.41",
     "uuid4": "^1.0.0"
