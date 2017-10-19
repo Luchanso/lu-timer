@@ -8,7 +8,7 @@ jobs:
     - stage: checks
     - script: yarn run lint
       env: JOB=lint
-    - script: yarn run test
+    - script: yarn test
       env: JOB=test
     - script: yarn run build
       env: JOB=build
