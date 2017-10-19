@@ -6,9 +6,10 @@ cache:
 jobs:
   include:
     - stage: checks
-    - script: yarn run lint
-    - script: yarn run test
-    - script: yarn run build
+      script:
+        - yarn run lint
+        - yarn run test
+        - yarn run build
     - stage: deploy
       deploy:
         provider: pages
