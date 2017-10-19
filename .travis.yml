@@ -3,12 +3,14 @@ node_js:
   - 8
 cache:
   yarn: true
+
+- script: echo 123
 jobs:
   include:
     - stage: checks
     - script: yarn run lint
       env: JOB=lint
-    - script: npm test
+    - script: yarn test
       env: JOB=test
     - script: yarn run build
       env: JOB=build
