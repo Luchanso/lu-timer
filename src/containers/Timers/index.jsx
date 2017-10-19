@@ -20,6 +20,7 @@ class Timers extends React.Component {
     onDelete: func.isRequired,
     onChangeTitle: func.isRequired,
     settingsMode: bool.isRequired,
+    onStop: func.isRequired,
   };
 
   componentDidMount() {
