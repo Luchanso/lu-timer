@@ -10,6 +10,7 @@ import DeleteForever from 'material-ui-icons/DeleteForever';
 import { withStyles } from 'material-ui/styles';
 import Tooltip from 'material-ui/Tooltip';
 import TextField from 'material-ui/TextField';
+import { formatTime as formatString } from '../../utils';
 
 const formatTime = ({ startTime, started, seconds: totalSeconds }) => {
   let total = totalSeconds;
@@ -18,15 +19,7 @@ const formatTime = ({ startTime, started, seconds: totalSeconds }) => {
     total += Math.round((Date.now() - startTime) / 1000);
   }
 
-  const seconds = Math.floor(total % 60);
-  const minutes = Math.floor(total / 60) % 60;
-  const hours = Math.floor(total / 60 / 60);
-
-  const resultSeconds = String(seconds).length === 1 ? `0${seconds}` : seconds;
-  const resultMinutes = String(minutes).length === 1 ? `0${minutes}` : minutes;
-  const resultHours = String(hours).length === 1 ? `0${hours}` : hours;
-
-  return `${resultHours}:${resultMinutes}:${resultSeconds}`;
+  return formatString(total);
 };
 
 const styles = {
