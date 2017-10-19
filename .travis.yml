@@ -5,14 +5,19 @@ cache:
   yarn: true
 jobs:
   include:
-    - stage: initial
+    - stage: checks
       script: yarn run lint
       script: yarn run test
       script: yarn run build
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  local_dir: build
-  on:
-    branch: master
+    - stage: deploy
+      script: skip
+      deploy:
+        provider: pages
+        skip_cleanup: true
+        github_token: $GITHUB_TOKEN
+        local_dir: build
+        on:
+          branch: master
+stages:
+  - checks
+  - deploy
