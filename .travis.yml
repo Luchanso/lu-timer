@@ -3,10 +3,12 @@ node_js:
   - 8
 cache:
   yarn: true
-script:
-  - yarn run lint
-  - yarn test
-  - yarn run build
+jobs:
+  include:
+    - stage: initial
+      script: yarn run lint
+      script: yarn run test
+      script: yarn run build
 deploy:
   provider: pages
   skip_cleanup: true
