@@ -6,7 +6,7 @@ import Controls from './Controls';
 import Timer from '../../components/Timer';
 import {
   stop as timerStop,
-  start as timerStart,
+  toggleNextTimer as timerToggleNextTimer,
   remove as timerDelete,
   changeTitle as timerChangeTitle,
 } from '../../store/timers';
@@ -60,7 +60,7 @@ class Timers extends React.Component {
 }
 
 const mapDispatchToProps = {
-  onStart: timerStart,
+  onStart: timerToggleNextTimer,
   onDelete: timerDelete,
   onChangeTitle: timerChangeTitle,
   onStop: timerStop,

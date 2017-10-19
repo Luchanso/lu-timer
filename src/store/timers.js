@@ -3,15 +3,32 @@ import uuid4 from 'uuid4';
 
 const DEFAULT_STATE = {};
 
-export const create = createAction('timers/CREATE');
-export const start = createAction('timers/START');
-export const stop = createAction('timers/STOP');
-export const changeTitle = createAction('timers/CHANGE_TITLE');
-export const remove = createAction('timers/REMOVE');
-
 // selectors
 
 export const getStartedTimer = state => Object.values(state).find(item => item.started);
+
+// actions
+
+export const create = createAction('timers/CREATE');
+export const start = createAction('timers/START');
+export const stop = createAction('timers/STOP');
+export const toggleNextTimer = id => (dispatch, getState) => {
+  const state = getState();
+  const { timers } = state;
+
+  const timerTarget = timers[id];
+  const timerActive = getStartedTimer(timers);
+
+  if (!timerTarget) return;
+
+  if (timerActive) {
+    dispatch(stop(timerActive.id));
+  }
+
+  dispatch(start(timerTarget.id));
+};
+export const changeTitle = createAction('timers/CHANGE_TITLE');
+export const remove = createAction('timers/REMOVE');
 
 // handlers
 
@@ -53,7 +70,7 @@ const handleStart = (state, action) => {
     return state;
   }
 
-  const result = {
+  return {
     ...state,
     [timer.id]: {
       ...timer,
@@ -61,14 +78,6 @@ const handleStart = (state, action) => {
       startTime: Date.now(),
     },
   };
-
-  const startedTimer = getStartedTimer(state);
-
-  if (startedTimer) {
-    return handleStop(result, stop(startedTimer.id));
-  }
-
-  return result;
 };
 
 const handleChangeTitle = (state, action) => {
