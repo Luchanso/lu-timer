@@ -16,8 +16,7 @@ jobs:
         skip_cleanup: true
         github_token: $GITHUB_TOKEN
         local_dir: build
-        on:
-          branch: master
 stages:
   - checks
-  - deploy
+  - name: deploy
+    if: branch = master
