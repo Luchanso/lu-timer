@@ -1,32 +1,58 @@
 import React from 'react';
-import { func, shape, arrayOf } from 'prop-types';
+import { func, shape, arrayOf, bool } from 'prop-types';
 import { connect } from 'react-redux';
 import Grid from 'material-ui/Grid';
 import Controls from './Controls';
 import Timer from '../../components/Timer';
-import { start as timerStart } from '../../store/timers';
+import {
+  stop as timerStop,
+  start as timerStart,
+  remove as timerDelete,
+  changeTitle as timerChangeTitle,
+} from '../../store/timers';
+
+const INTERVAL_UPDATE = 1000; // 1 sec.
 
 class Timers extends React.Component {
   static propTypes = {
     timers: arrayOf(shape({})).isRequired,
     onStart: func.isRequired,
+    onDelete: func.isRequired,
+    onChangeTitle: func.isRequired,
+    settingsMode: bool.isRequired,
   };
 
-  handleClick = (id) => {
-    const { onStart } = this.props;
+  componentDidMount() {
+    this.interval = setInterval(() => {
+      this.forceUpdate();
+    }, INTERVAL_UPDATE);
+  }
 
-    onStart(id);
-  };
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
 
   render() {
-    const { timers } = this.props;
+    const {
+      timers, settingsMode, onDelete, onStart, onChangeTitle, onStop,
+    } = this.props;
 
     return (
       <Grid container>
         <Grid item xs={12}>
           <Controls />
         </Grid>
-        {timers.map(timer => <Timer key={timer.id} {...timer} onClick={this.handleClick} />)}
+        {timers.map(timer => (
+          <Timer
+            key={timer.id}
+            {...timer}
+            onStart={onStart}
+            onDelete={onDelete}
+            onChangeTitle={onChangeTitle}
+            onStop={onStop}
+            settingsMode={settingsMode}
+          />
+        ))}
       </Grid>
     );
   }
@@ -34,35 +60,14 @@ class Timers extends React.Component {
 
 const mapDispatchToProps = {
   onStart: timerStart,
+  onDelete: timerDelete,
+  onChangeTitle: timerChangeTitle,
+  onStop: timerStop,
 };
 
-const testData = [
-  {
-    id: '1',
-    title: 'Отгрузка на торговый склад номер №4',
-    seconds: 0,
-    started: false,
-    startTime: new Date().getTime(),
-  },
-  {
-    id: '2',
-    title: 'ASC',
-    seconds: 100500,
-    started: true,
-    startTime: new Date().getTime(),
-  },
-];
-
-for (let i = 0; i < 13; i += 1) {
-  testData.push({
-    seconds: Math.round(Math.random() * 200000),
-    id: Math.random().toString(),
-    title: (Math.random() * 1e10).toString(36),
-    startTime: new Date().getTime(),
-    started: false,
-  });
-}
-
-const mapStateToProps = () => ({ timers: testData });
+const mapStateToProps = ({ settingsMode, timers }) => ({
+  timers: Object.values(timers),
+  settingsMode,
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timers);

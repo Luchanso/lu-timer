@@ -8,6 +8,7 @@ import { FormControlLabel, FormGroup } from 'material-ui/Form';
 import Switch from 'material-ui/Switch';
 import { toggle } from '../../store/settingsMode';
 import { updateUiTheme } from '../../store/uiTheme';
+import { getStartedTimer, create as createTimer, stop as stopTimer } from '../../store/timers';
 
 const styles = {
   button: {
@@ -24,6 +25,15 @@ class Controls extends React.PureComponent {
     onUpdateUiTheme: func.isRequired,
     onToggleSettingsMode: func.isRequired,
     settingsMode: bool.isRequired,
+    startedTimer: shape({
+      title: string.isRequired,
+    }),
+    onCreateTimer: func.isRequired,
+    onStopTimer: func.isRequired,
+  };
+
+  static defaultProps = {
+    startedTimer: undefined,
   };
 
   handleChangeTheme = () => {
@@ -44,9 +54,19 @@ class Controls extends React.PureComponent {
     onToggleSettingsMode();
   };
 
+  handleNewTimer = () => {
+    this.props.onCreateTimer('');
+  };
+
+  handleStop = () => {
+    const { startedTimer: { id }, onStopTimer } = this.props;
+
+    onStopTimer(id);
+  }
+
   render() {
     const {
-      classes, uiTheme, settingsMode,
+      classes, uiTheme, settingsMode, startedTimer,
     } = this.props;
 
     const theme = uiTheme.palette.type;
@@ -62,11 +82,22 @@ class Controls extends React.PureComponent {
           >
             {settingsMode ? 'Режим работы' : 'Режим настройки'}
           </Button>
+          {settingsMode && (
+            <Button raised color="accent" className={classes.button} onClick={this.handleNewTimer}>
+              Создать
+            </Button>
+          )}
           <Button raised color="primary" className={classes.button}>
             Экспорт CSV
           </Button>
-          <Button raised color="accent" className={classes.button}>
-            Стоп
+          <Button
+            raised
+            color="accent"
+            className={classes.button}
+            disabled={settingsMode || !startedTimer}
+            onClick={this.handleStop}
+          >
+            Остановить {startedTimer && `"${startedTimer.title}"`}
           </Button>
           <FormControlLabel
             control={<Switch checked={theme === 'dark'} onChange={this.handleChangeTheme} />}
@@ -78,14 +109,17 @@ class Controls extends React.PureComponent {
   }
 }
 
-const mapStateToProps = ({ uiTheme, settingsMode }) => ({
+const mapStateToProps = ({ uiTheme, settingsMode, timers }) => ({
   settingsMode,
   uiTheme,
+  startedTimer: getStartedTimer(timers),
 });
 
 const mapDispatchToProps = {
   onToggleSettingsMode: toggle,
   onUpdateUiTheme: updateUiTheme,
+  onCreateTimer: createTimer,
+  onStopTimer: stopTimer,
 };
 
 export default compose(

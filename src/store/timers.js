@@ -19,7 +19,7 @@ const handleCreate = (state, action) => {
   const id = uuid4();
   return {
     ...state,
-    id: {
+    [id]: {
       id,
       title: action.payload,
       started: false,
@@ -53,16 +53,22 @@ const handleStart = (state, action) => {
     return state;
   }
 
-  const startedTimer = getStartedTimer(state);
-
-  return handleStop({
+  const result = {
     ...state,
     [timer.id]: {
       ...timer,
       started: true,
       startTime: Date.now(),
     },
-  }, stop(startedTimer.id));
+  };
+
+  const startedTimer = getStartedTimer(state);
+
+  if (startedTimer) {
+    return handleStop(result, stop(startedTimer.id));
+  }
+
+  return result;
 };
 
 const handleChangeTitle = (state, action) => {
@@ -80,17 +86,17 @@ const handleChangeTitle = (state, action) => {
 
 const handleRemove = (state, action) => {
   const newState = { ...state };
-  delete newState[action.payload.id];
+  delete newState[action.payload];
   return newState;
 };
 
 const timers = handleActions(
   {
-    create: handleCreate,
-    start: handleStart,
-    stop: handleStop,
-    changeTitle: handleChangeTitle,
-    remove: handleRemove,
+    [create]: handleCreate,
+    [start]: handleStart,
+    [stop]: handleStop,
+    [changeTitle]: handleChangeTitle,
+    [remove]: handleRemove,
   },
   DEFAULT_STATE,
 );
