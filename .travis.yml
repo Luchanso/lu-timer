@@ -6,11 +6,10 @@ cache:
 jobs:
   include:
     - stage: checks
-      script: yarn run lint
-      script: yarn run test
-      script: yarn run build
+    - script: yarn run lint
+    - script: yarn run test
+    - script: yarn run build
     - stage: deploy
-      script: skip
       deploy:
         provider: pages
         skip_cleanup: true
