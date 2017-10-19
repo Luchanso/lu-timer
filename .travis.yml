@@ -15,6 +15,7 @@ jobs:
       env: JOB=build
     - stage: deploy
       env: JOB=deploy
+      script: echo empty-script
       deploy:
         provider: pages
         skip_cleanup: true
