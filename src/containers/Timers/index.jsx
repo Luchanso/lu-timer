@@ -2,32 +2,14 @@ import React from 'react';
 import { func, shape, arrayOf } from 'prop-types';
 import { connect } from 'react-redux';
 import Grid from 'material-ui/Grid';
-import { withStyles } from 'material-ui/styles';
-import { compose } from 'recompose';
 import Controls from './Controls';
 import Timer from '../../components/Timer';
-import { updateUiTheme } from '../../store/uiTheme';
 import { start as timerStart } from '../../store/timers';
 
 class Timers extends React.Component {
   static propTypes = {
-    classes: shape({}).isRequired,
-    uiTheme: shape({}).isRequired,
     timers: arrayOf(shape({})).isRequired,
-    onUpdateUiTheme: func.isRequired,
     onStart: func.isRequired,
-  };
-
-  handleChangeTheme = () => {
-    const { uiTheme, onUpdateUiTheme } = this.props;
-
-    onUpdateUiTheme({
-      ...uiTheme,
-      palette: {
-        ...uiTheme.palette,
-        type: uiTheme.palette.type === 'light' ? 'dark' : 'light',
-      },
-    });
   };
 
   handleClick = (id) => {
@@ -37,12 +19,12 @@ class Timers extends React.Component {
   };
 
   render() {
-    const { uiTheme, timers } = this.props;
+    const { timers } = this.props;
 
     return (
       <Grid container>
         <Grid item xs={12}>
-          <Controls theme={uiTheme.palette.type} onChangeTheme={this.handleChangeTheme} />
+          <Controls />
         </Grid>
         {timers.map(timer => <Timer key={timer.id} {...timer} onClick={this.handleClick} />)}
       </Grid>
@@ -51,7 +33,6 @@ class Timers extends React.Component {
 }
 
 const mapDispatchToProps = {
-  onUpdateUiTheme: updateUiTheme,
   onStart: timerStart,
 };
 
@@ -82,9 +63,6 @@ for (let i = 0; i < 13; i += 1) {
   });
 }
 
-const mapStateToProps = ({ uiTheme }) => ({ uiTheme, timers: testData });
+const mapStateToProps = () => ({ timers: testData });
 
-export default compose(
-  withStyles(null, { withStyles: true }),
-  connect(mapStateToProps, mapDispatchToProps),
-)(Timers);
+export default connect(mapStateToProps, mapDispatchToProps)(Timers);

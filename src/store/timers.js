@@ -84,7 +84,7 @@ const handleRemove = (state, action) => {
   return newState;
 };
 
-export const timers = handleActions(
+const timers = handleActions(
   {
     create: handleCreate,
     start: handleStart,
@@ -94,3 +94,5 @@ export const timers = handleActions(
   },
   DEFAULT_STATE,
 );
+
+export default timers;

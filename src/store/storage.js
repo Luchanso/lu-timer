@@ -16,5 +16,11 @@ export const storageMiddlewareReducer = next => (state, action) => {
     }
   }
 
-  return next(state, action);
+  const result = next(state, action);
+
+  if (action.type !== '@@INIT') {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(result));
+  }
+
+  return result;
 };

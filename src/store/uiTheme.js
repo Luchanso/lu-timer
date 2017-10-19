@@ -12,10 +12,12 @@ const defaultTheme = {
 
 export const updateUiTheme = createAction('uiTheme/UPDATE');
 
-export const uiTheme = handleAction(
+const uiTheme = handleAction(
   updateUiTheme,
   (state, action) => ({
     ...action.payload,
   }),
   defaultTheme,
 );
+
+export default uiTheme;

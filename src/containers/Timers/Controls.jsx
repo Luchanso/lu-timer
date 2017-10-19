@@ -1,9 +1,13 @@
 import React from 'react';
-import { shape, string, func } from 'prop-types';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+import { shape, string, func, bool } from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Button from 'material-ui/Button';
 import { FormControlLabel, FormGroup } from 'material-ui/Form';
 import Switch from 'material-ui/Switch';
+import { toggle } from '../../store/settingsMode';
+import { updateUiTheme } from '../../store/uiTheme';
 
 const styles = {
   button: {
@@ -11,44 +15,80 @@ const styles = {
   },
 };
 
-const Controls = ({ classes, theme, onChangeTheme }) => (
-  <div>
-    <FormGroup row>
-      <Button raised color="primary" className={classes.button}>
-        Настройки
-      </Button>
-      <Button raised color="primary" className={classes.button}>
-        Экспорт CSV
-      </Button>
-      <Button raised color="accent" className={classes.button}>
-        Стоп
-      </Button>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={theme === 'dark'}
-            onChange={() => {
-              onChangeTheme();
-            }}
+class Controls extends React.PureComponent {
+  static propTypes = {
+    classes: shape({
+      button: string,
+    }).isRequired,
+    uiTheme: shape({}).isRequired,
+    onUpdateUiTheme: func.isRequired,
+    onToggleSettingsMode: func.isRequired,
+    settingsMode: bool.isRequired,
+  };
+
+  handleChangeTheme = () => {
+    const { uiTheme, onUpdateUiTheme } = this.props;
+
+    onUpdateUiTheme({
+      ...uiTheme,
+      palette: {
+        ...uiTheme.palette,
+        type: uiTheme.palette.type === 'light' ? 'dark' : 'light',
+      },
+    });
+  };
+
+  handleToggleSettingsMode = () => {
+    const { onToggleSettingsMode } = this.props;
+
+    onToggleSettingsMode();
+  };
+
+  render() {
+    const {
+      classes, uiTheme, settingsMode,
+    } = this.props;
+
+    const theme = uiTheme.palette.type;
+
+    return (
+      <div>
+        <FormGroup row>
+          <Button
+            raised
+            color="primary"
+            className={classes.button}
+            onClick={this.handleToggleSettingsMode}
+          >
+            {settingsMode ? 'Режим работы' : 'Режим настройки'}
+          </Button>
+          <Button raised color="primary" className={classes.button}>
+            Экспорт CSV
+          </Button>
+          <Button raised color="accent" className={classes.button}>
+            Стоп
+          </Button>
+          <FormControlLabel
+            control={<Switch checked={theme === 'dark'} onChange={this.handleChangeTheme} />}
+            label="Тёмная тема"
           />
-        }
-        label="Тёмная тема"
-      />
-    </FormGroup>
-  </div>
-);
+        </FormGroup>
+      </div>
+    );
+  }
+}
 
-Controls.propTypes = {
-  classes: shape({
-    button: string,
-  }).isRequired,
-  // eslint-disable-next-line react/no-typos
-  onChangeTheme: func.isRequired,
-  theme: string,
+const mapStateToProps = ({ uiTheme, settingsMode }) => ({
+  settingsMode,
+  uiTheme,
+});
+
+const mapDispatchToProps = {
+  onToggleSettingsMode: toggle,
+  onUpdateUiTheme: updateUiTheme,
 };
 
-Controls.defaultProps = {
-  theme: 'light',
-};
-
-export default withStyles(styles)(Controls);
+export default compose(
+  withStyles(styles, { withStyles: true }),
+  connect(mapStateToProps, mapDispatchToProps),
+)(Controls);
