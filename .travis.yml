@@ -5,7 +5,7 @@ cache:
   yarn: true
 
 script:
-  - echo 123
+- echo 123
 jobs:
   include:
     - stage: checks
