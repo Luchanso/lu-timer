@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { stop, start } from './timers';
+import { stop, start, drop } from './timers';
 
 const DEFAULT_STATE = [];
 
@@ -21,10 +21,13 @@ const handleStop = (state, action) => {
   }];
 };
 
+const handleDrop = () => DEFAULT_STATE;
+
 const timerLog = handleActions(
   {
     [start]: handleStart,
     [stop]: handleStop,
+    [drop]: handleDrop,
   },
   DEFAULT_STATE,
 );

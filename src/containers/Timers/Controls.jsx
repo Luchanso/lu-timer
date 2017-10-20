@@ -9,7 +9,12 @@ import Switch from 'material-ui/Switch';
 import moment from 'moment';
 import { toggle } from '../../store/settingsMode';
 import { updateUiTheme } from '../../store/uiTheme';
-import { getStartedTimer, create as createTimer, stop as stopTimer } from '../../store/timers';
+import {
+  getStartedTimer,
+  create as createTimer,
+  stop as stopTimer,
+  drop as dropTimer,
+} from '../../store/timers';
 import { generateCSV, downloadCSVFile, mergeTimersWithLogs, formatTime } from '../../utils';
 
 const styles = {
@@ -36,6 +41,7 @@ class Controls extends React.PureComponent {
     onStopTimer: func.isRequired,
     timers: shape({}).isRequired,
     timerLog: arrayOf(shape({})).isRequired,
+    onDropTimers: func.isRequired,
   };
 
   static defaultProps = {
@@ -70,6 +76,10 @@ class Controls extends React.PureComponent {
     onStopTimer(id);
   };
 
+  handleDrop = () => {
+    this.props.onDropTimers();
+  };
+
   handleDownloadReport = () => {
     const { timers, timerLog } = this.props;
 
@@ -94,7 +104,6 @@ class Controls extends React.PureComponent {
     }
 
     const csv = generateCSV(result);
-    console.log(csv);
     downloadCSVFile(csv);
   };
 
@@ -138,6 +147,9 @@ class Controls extends React.PureComponent {
           >
             Остановить {startedTimer && `"${startedTimer.title}"`}
           </Button>
+          <Button raised color="accent" className={classes.button} onClick={this.handleDrop}>
+            Сбросить все счётчики
+          </Button>
           <FormControlLabel
             control={<Switch checked={theme === 'dark'} onChange={this.handleChangeTheme} />}
             label="Тёмная тема"
@@ -163,6 +175,7 @@ const mapDispatchToProps = {
   onUpdateUiTheme: updateUiTheme,
   onCreateTimer: createTimer,
   onStopTimer: stopTimer,
+  onDropTimers: dropTimer,
 };
 
 export default compose(

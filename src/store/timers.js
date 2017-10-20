@@ -12,6 +12,7 @@ export const getStartedTimer = state => Object.values(state).find(item => item.s
 export const create = createAction('timers/CREATE');
 export const start = createAction('timers/START');
 export const stop = createAction('timers/STOP');
+export const drop = createAction('timers/DROP');
 export const toggleNextTimer = id => (dispatch, getState) => {
   const state = getState();
   const { timers } = state;
@@ -99,6 +100,8 @@ const handleRemove = (state, action) => {
   return newState;
 };
 
+const handleDrop = () => DEFAULT_STATE;
+
 const timers = handleActions(
   {
     [create]: handleCreate,
@@ -106,6 +109,7 @@ const timers = handleActions(
     [stop]: handleStop,
     [changeTitle]: handleChangeTitle,
     [remove]: handleRemove,
+    [drop]: handleDrop,
   },
   DEFAULT_STATE,
 );
