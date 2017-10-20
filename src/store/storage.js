@@ -2,8 +2,11 @@ import { createAction } from 'redux-actions';
 
 const STORAGE_KEY = 'appState';
 
+export const record = createAction('storage/RECORD');
 export const save = createAction('storage/SAVE');
 export const load = createAction('storage/LOAD');
+
+let recordActive = false;
 
 export const storageMiddlewareReducer = next => (state, action) => {
   if (action.type === save.toString()) {
@@ -16,9 +19,13 @@ export const storageMiddlewareReducer = next => (state, action) => {
     }
   }
 
+  if (action.type === record.toString()) {
+    recordActive = true;
+  }
+
   const result = next(state, action);
 
-  if (action.type !== '@@INIT') {
+  if (recordActive) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(result));
   }
 

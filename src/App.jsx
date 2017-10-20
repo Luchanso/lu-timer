@@ -14,21 +14,21 @@ import AppUpdater from './components/AppUpdater';
 
 require('typeface-roboto');
 
-const ELECTRON_PATHNAME = '/electron';
+const ELECTRON_SEARCH = '?electron=1';
 
 const App = ({ location }) => (
   <Provider store={store}>
     <ThemeProvider>
       <Timers />
       <LoadApp />
-      {location.pathname === ELECTRON_PATHNAME && <AppUpdater />}
+      {location.search === ELECTRON_SEARCH && <AppUpdater />}
     </ThemeProvider>
   </Provider>
 );
 
 App.propTypes = {
   location: shape({
-    pathname: string.isRequired,
+    search: string.isRequired,
   }).isRequired,
 };
 
