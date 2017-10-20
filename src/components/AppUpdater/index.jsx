@@ -35,7 +35,7 @@ class AppUpdater extends React.Component {
   handleCheckUpdate = async () => {
     try {
       const { ipcRenderer } = window.require('electron');
-      const result = await fetch('/version.json');
+      const result = await fetch('version.json');
       const assembly = await result.json();
       const serverVersion = assembly['app-desktop'].version;
 
