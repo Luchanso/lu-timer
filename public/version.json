@@ -1,0 +1,7 @@
+{
+  "app-desktop": {
+    "version": "1.0.0",
+    "description": "Был добавлен новый функционал, исправлены ошибки, изменены визуальные стили",
+    "update-url": "https://github.com/Luchanso/lu-timer"
+  }
+}
