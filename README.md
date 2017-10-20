@@ -25,4 +25,4 @@ Windows приложение
 Данные, которые были экспортированы в csv
 ![screen5](https://user-images.githubusercontent.com/2098777/31832225-ea086026-b5ce-11e7-8dda-215be26a5871.png)
 
-
+Будем рады узнать ваши отзывы и предложения: luchansodev@gmail.com
